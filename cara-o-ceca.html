@@ -119,10 +119,13 @@
 				}
 			})
 
+			// Ejecuta la función que procesa cada ronda
 			form.addEventListener('submit', (event) => {
 				event.preventDefault()
 
 				errorMessage.textContent = ''
+
+				// Calcula si el usuario gano la ronda
 
 				let userLado = getSelectedLado()
 
@@ -130,11 +133,11 @@
 					errorMessage.textContent = 'seleccionar cara o ceca'
 					return
 				}
+
 				const machineLadoIdx = getRandomInt(0, options.length)
 				const machineLado = options[machineLadoIdx]
 				flipSide.textContent = machineLado
-				//console.log({ userLado, machineLado })
-				//calculo del resultado del partial match
+
 				if (machineLado === userLado) {
 					partialResult.textContent = 'Ganaste'
 					rounds.push(true)
@@ -143,6 +146,7 @@
 					rounds.push(false)
 				}
 
+				// Computa valores para poder razonar las reglas del juego de manera semántica
 				let flipCount = rounds.length
 				let roundsWonByUser = rounds.filter((r) => r).length
 
@@ -153,15 +157,12 @@
 					wonByUser: roundsWonByUser,
 				})
 
-				//ver quien es el ganador FINAL, 2 ganados
-
+				// Chqeuea si se completo un Game
 				if (
 					flipCount === 3 ||
 					roundsWonByUser === 2 ||
 					(flipCount === 2 && roundsWonByUser === 0)
 				) {
-					// ver quien es el winner, la maquina o el humano y seguir
-
 					gameHistory.push(roundsWonByUser === 2)
 
 					console.log('game ended', {
@@ -172,15 +173,6 @@
 					finalResult.textContent = winner
 					flipButton.disabled = true
 					finalResultView.style.display = 'block'
-
-					//(ok)  ver logica de mejor de 3, 2 ganados seguidos = ganador
-					//(ok)  mostrar mensajes partialResult y finalResult
-					// historial de games ganados / perdidos
-					//(ok)  reset para volver a jugar
-					//(ok)  		- ocultar boton de flip
-					//(ok)  		- resetear contador
-					// 		- agregar al hisotrial el reslutado
-					//(uso RESET)       - agregar boton de "volver a jugar"
 				}
 			})
 		</script>
