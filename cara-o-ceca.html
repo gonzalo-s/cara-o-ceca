@@ -62,12 +62,13 @@
 			function setInitialState() {
 				winner = ''
 				rounds = []
+				form.style.display = 'block'
 				flipCountDisplay.textContent = 0
 				flipButton.disabled = true
 				partialResult.textContent = ''
 				finalResult.textContent = ''
 				flipSide.textContent = ''
-				finalResultView.style.display = ''
+				finalResultView.style.display = 'none'
 				errorMessage.textContent = 'seleccionar cara o ceca'
 				form.cara.checked = false
 				form.ceca.checked = false
@@ -169,7 +170,7 @@
 						userWon: roundsWonByUser === 2,
 						history: gameHistory,
 					})
-
+					form.style.display = 'none'
 					finalResult.textContent = winner
 					flipButton.disabled = true
 					finalResultView.style.display = 'block'
