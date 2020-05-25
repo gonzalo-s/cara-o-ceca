@@ -55,12 +55,10 @@
 			)
 
 			// TODO: mejor nombre
-			let winner
 			let rounds
 
 			setInitialState()
 			function setInitialState() {
-				winner = ''
 				rounds = []
 				form.style.display = 'block'
 				flipCountDisplay.textContent = 0
@@ -111,12 +109,6 @@
 				if (getSelectedLado()) {
 					errorMessage.textContent = ''
 					flipButton.disabled = false
-					// si cambia de opcion cara o ceca resetear intentos SOLO si ya hay un ganador
-					if (winner) {
-						resetHistorialResult()
-						flipCountDisplay.textContent = 0
-					}
-					console.log(winner)
 				}
 			})
 
@@ -164,14 +156,17 @@
 					roundsWonByUser === 2 ||
 					(flipCount === 2 && roundsWonByUser === 0)
 				) {
-					gameHistory.push(roundsWonByUser === 2)
+					let userWon = roundsWonByUser === 2
+
+					gameHistory.push(userWon)
 
 					console.log('game ended', {
-						userWon: roundsWonByUser === 2,
+						userWon,
 						history: gameHistory,
 					})
+
 					form.style.display = 'none'
-					finalResult.textContent = winner
+					finalResult.textContent = userWon ? 'Ganaste' : 'Perdiste'
 					flipButton.disabled = true
 					finalResultView.style.display = 'block'
 				}
