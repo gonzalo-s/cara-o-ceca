@@ -48,32 +48,31 @@
 			const partialResult = document.querySelector('#partialResult')
 			const finalResult = document.querySelector('#finalResult')
 			const finalResultView = document.querySelector('#finalResultView')
-			const buttonDisabled = form.querySelector('#flipButton')
+			const flipButton = form.querySelector('#flipButton')
 			let resetButton = document.querySelector('#resetButton')
 			let resetHistoryButton = document.querySelector(
 				'#resetHistoryButton'
 			)
-			let historialResult = [
-				{ name: 'human', wins: 0 },
-				{ name: 'machine', wins: 0 },
-			]
-			let winner = ''
 
-			buttonDisabled.disabled = true
+			// TODO: mejor nombre
+			let winner
+			let rounds
 
-			let flipCount = 0
-			flipCountDisplay.textContent = flipCount
-			errorMessage.textContent = 'seleccionar cara o ceca'
-
-			resetForm()
-			function resetForm() {
+			setInitialState()
+			function setInitialState() {
+				winner = ''
+				rounds = []
+				flipCountDisplay.textContent = 0
+				flipButton.disabled = true
+				partialResult.textContent = ''
+				finalResult.textContent = ''
+				flipSide.textContent = ''
+				finalResultView.style.display = ''
+				errorMessage.textContent = 'seleccionar cara o ceca'
 				form.cara.checked = false
 				form.ceca.checked = false
 			}
-			function resetHistorialResult() {
-				historialResult[0].wins = 0
-				historialResult[1].wins = 0
-			}
+
 			if (getSelectedLado()) {
 				partialResult.textContent = ''
 			}
@@ -97,17 +96,7 @@
 
 			resetButton.addEventListener('click', () => {
 				//resetear todo para volver a empezar
-				flipCount = 0
-				winner = ''
-				resetHistorialResult()
-				buttonDisabled.disabled = false
-				flipCountDisplay.textContent = flipCount
-				partialResult.textContent = ''
-				finalResult.textContent = ''
-				flipSide.textContent = ''
-				resetForm()
-				finalResultView.style.display = ''
-				errorMessage.textContent = 'seleccionar cara o ceca'
+				setInitialState()
 			})
 
 			resetHistoryButton.addEventListener('click', () => {
@@ -120,12 +109,11 @@
 			form.addEventListener('change', () => {
 				if (getSelectedLado()) {
 					errorMessage.textContent = ''
-					buttonDisabled.disabled = false
+					flipButton.disabled = false
 					// si cambia de opcion cara o ceca resetear intentos SOLO si ya hay un ganador
 					if (winner) {
-						flipCount = 0
 						resetHistorialResult()
-						flipCountDisplay.textContent = flipCount
+						flipCountDisplay.textContent = 0
 					}
 					console.log(winner)
 				}
@@ -149,41 +137,40 @@
 				//calculo del resultado del partial match
 				if (machineLado === userLado) {
 					partialResult.textContent = 'Ganaste'
-					historialResult[0].wins = historialResult[0].wins + 1
+					rounds.push(true)
 				} else {
 					partialResult.textContent = 'Perdiste'
-					historialResult[1].wins = historialResult[1].wins + 1
+					rounds.push(false)
 				}
-				flipCount = historialResult[0].wins + historialResult[1].wins
+
+				let flipCount = rounds.length
+				let roundsWonByUser = rounds.filter((r) => r).length
+
 				flipCountDisplay.textContent = flipCount
+
+				console.log('round', {
+					total: flipCount,
+					wonByUser: roundsWonByUser,
+				})
 
 				//ver quien es el ganador FINAL, 2 ganados
 
 				if (
-					historialResult[0].wins === 2 ||
-					historialResult[1].wins === 2
+					flipCount === 3 ||
+					roundsWonByUser === 2 ||
+					(flipCount === 2 && roundsWonByUser === 0)
 				) {
-					flipCountDisplay.textContent = flipCount
 					// ver quien es el winner, la maquina o el humano y seguir
-					// TODO: map vs foreach
-					historialResult.map((player) => {
-						if (player.wins === 2) {
-							winner = player.name
-						}
+
+					gameHistory.push(roundsWonByUser === 2)
+
+					console.log('game ended', {
+						userWon: roundsWonByUser === 2,
+						history: gameHistory,
 					})
-					console.log(
-						'historialResult ',
-						JSON.parse(JSON.stringify(historialResult))
-					)
-
-					gameHistory.push(
-						JSON.parse(JSON.stringify(historialResult))
-					)
-
-					console.log('gameHistory ', gameHistory)
 
 					finalResult.textContent = winner
-					buttonDisabled.disabled = true
+					flipButton.disabled = true
 					finalResultView.style.display = 'block'
 
 					//(ok)  ver logica de mejor de 3, 2 ganados seguidos = ganador
