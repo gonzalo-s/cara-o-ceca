@@ -36,8 +36,8 @@
 				<li>
 					<input
 						type="radio"
-						id="1"
-						name="cantidadDeRondas"
+						id="one"
+						name="roundsNumber"
 						value="1"
 					/>
 					<label for="1">1</label>
@@ -45,18 +45,17 @@
 				<li>
 					<input
 						type="radio"
-						id="3"
-						name="cantidadDeRondas"
+						id="three"
+						name="roundsNumber"
 						value="3"
-						checked="checked"
 					/>
 					<label for="3">3</label>
 				</li>
 				<li>
 					<input
 						type="radio"
-						id="5"
-						name="cantidadDeRondas"
+						id="five"
+						name="roundsNumber"
 						value="5"
 					/>
 					<label for="5">5</label>
@@ -79,6 +78,7 @@
 			// guardar una referencia al formulario en una variable form
 			const options = ['cara', 'ceca']
 			let gameHistory = []
+			let selectedRoundsNumber = 0
 			const gameForm = document.querySelector('#gameForm')
 			const gameTable = document.querySelector('#gameTable')
 			const setupForm = document.querySelector('#setupForm')
@@ -97,20 +97,42 @@
 			// TODO: mejor nombre
 			let rounds
 
+			//Vista INICIO DEL JUEGO
 			setInicioDelJuego()
 			function setInicioDelJuego() {
-				rounds = []
+				setupForm.one.checked = false
+				setupForm.three.checked = true //default
+				setupForm.five.checked = false
 				gameForm.style.display = 'none'
 				gameTable.style.display = 'none'
-				flipCountDisplay.textContent = 0
-				flipButton.disabled = true
-				partialResult.textContent = ''
-				finalResult.textContent = ''
-				flipSide.textContent = ''
-				finalResultView.style.display = 'none'
-				errorMessage.textContent = 'seleccionar cara o ceca'
-				gameForm.cara.checked = false
-				gameForm.ceca.checked = false
+				selectedRoundsNumber = getSelectedRoundsNumber()
+				//rounds = []
+				//flipCountDisplay.textContent = 0
+				//flipButton.disabled = true
+				//partialResult.textContent = ''
+				//finalResult.textContent = ''
+				//flipSide.textContent = ''
+				//finalResultView.style.display = 'none'
+				//errorMessage.textContent = 'seleccionar cara o ceca'
+				//gameForm.cara.checked = false
+				//gameForm.ceca.checked = false
+			}
+			setupForm.addEventListener('submit', (event) => {
+				event.preventDefault()
+				selectedRoundsNumber = getSelectedRoundsNumber()
+				setupForm.style.display = 'none'
+
+				gameForm.style.display = 'block'
+				gameTable.style.display = 'block'
+			})
+			function getSelectedRoundsNumber() {
+				const data = new FormData(setupForm)
+				for (const entry of data) {
+					if (entry[0] === 'roundsNumber') {
+						return entry[1]
+					}
+				}
+				return null
 			}
 
 			if (getSelectedLado()) {
