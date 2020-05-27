@@ -14,7 +14,7 @@
 	</style>
 	<body>
 		<h1>Cara o Ceca</h1>
-		<form>
+		<form id="gameForm">
 			<ul>
 				<li class="option">
 					<input type="radio" id="cara" name="lado" value="cara" />
@@ -29,26 +29,66 @@
 				Flip
 			</button>
 		</form>
-		<div>Intentos: <span id="flipCountDisplay"></span></div>
-		<div>Moneda: <span id="flipSide"></span></div>
-		<div id="errorMessage">error:</div>
-		<div id="partialResult"></div>
-		<div id="finalResultView">Ganador: <span id="finalResult"></span></div>
-		<button id="resetButton">RESET</button>
-		<button id="resetHistoryButton">RESET HISTORY</button>
 
+		<form id="setupForm">
+			seleccionar cantidad de rondas
+			<ul>
+				<li>
+					<input
+						type="radio"
+						id="1"
+						name="cantidadDeRondas"
+						value="1"
+					/>
+					<label for="1">1</label>
+				</li>
+				<li>
+					<input
+						type="radio"
+						id="3"
+						name="cantidadDeRondas"
+						value="3"
+						checked="checked"
+					/>
+					<label for="3">3</label>
+				</li>
+				<li>
+					<input
+						type="radio"
+						id="5"
+						name="cantidadDeRondas"
+						value="5"
+					/>
+					<label for="5">5</label>
+				</li>
+			</ul>
+			<button id="startGame" type="submit">Start Game</button>
+		</form>
+		<div id="gameTable">
+			<div>Intentos: <span id="flipCountDisplay"></span></div>
+			<div>Moneda: <span id="flipSide"></span></div>
+			<div id="errorMessage">error:</div>
+			<div id="partialResult"></div>
+			<div id="finalResultView">
+				Ganador: <span id="finalResult"></span>
+			</div>
+			<button id="resetButton">RESET</button>
+			<button id="resetHistoryButton">RESET HISTORY</button>
+		</div>
 		<script>
 			// guardar una referencia al formulario en una variable form
 			const options = ['cara', 'ceca']
 			let gameHistory = []
-			const form = document.querySelector('form')
+			const gameForm = document.querySelector('#gameForm')
+			const gameTable = document.querySelector('#gameTable')
+			const setupForm = document.querySelector('#setupForm')
 			const flipCountDisplay = document.querySelector('#flipCountDisplay')
 			const flipSide = document.querySelector('#flipSide')
 			const errorMessage = document.querySelector('#errorMessage')
 			const partialResult = document.querySelector('#partialResult')
 			const finalResult = document.querySelector('#finalResult')
 			const finalResultView = document.querySelector('#finalResultView')
-			const flipButton = form.querySelector('#flipButton')
+			const flipButton = gameForm.querySelector('#flipButton')
 			let resetButton = document.querySelector('#resetButton')
 			let resetHistoryButton = document.querySelector(
 				'#resetHistoryButton'
@@ -57,10 +97,11 @@
 			// TODO: mejor nombre
 			let rounds
 
-			setInitialState()
-			function setInitialState() {
+			setInicioDelJuego()
+			function setInicioDelJuego() {
 				rounds = []
-				form.style.display = 'block'
+				gameForm.style.display = 'none'
+				gameTable.style.display = 'none'
 				flipCountDisplay.textContent = 0
 				flipButton.disabled = true
 				partialResult.textContent = ''
@@ -68,8 +109,8 @@
 				flipSide.textContent = ''
 				finalResultView.style.display = 'none'
 				errorMessage.textContent = 'seleccionar cara o ceca'
-				form.cara.checked = false
-				form.ceca.checked = false
+				gameForm.cara.checked = false
+				gameForm.ceca.checked = false
 			}
 
 			if (getSelectedLado()) {
@@ -78,7 +119,7 @@
 
 			//extraer lado seleccionado de form con formdata
 			function getSelectedLado() {
-				const data = new FormData(form)
+				const data = new FormData(gameForm)
 				for (const entry of data) {
 					if (entry[0] === 'lado') {
 						return entry[1]
@@ -95,7 +136,7 @@
 
 			resetButton.addEventListener('click', () => {
 				//resetear todo para volver a empezar
-				setInitialState()
+				setInicioDelJuego()
 			})
 
 			resetHistoryButton.addEventListener('click', () => {
@@ -105,7 +146,7 @@
 				return gameHistory
 			})
 
-			form.addEventListener('change', () => {
+			gameForm.addEventListener('change', () => {
 				if (getSelectedLado()) {
 					errorMessage.textContent = ''
 					flipButton.disabled = false
@@ -113,7 +154,7 @@
 			})
 
 			// Ejecuta la función que procesa cada ronda
-			form.addEventListener('submit', (event) => {
+			gameForm.addEventListener('submit', (event) => {
 				event.preventDefault()
 
 				errorMessage.textContent = ''
@@ -165,7 +206,7 @@
 						history: gameHistory,
 					})
 
-					form.style.display = 'none'
+					gameForm.style.display = 'none'
 					finalResult.textContent = userWon ? 'Ganaste' : 'Perdiste'
 					flipButton.disabled = true
 					finalResultView.style.display = 'block'
