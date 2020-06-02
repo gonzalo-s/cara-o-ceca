@@ -14,22 +14,6 @@
 	</style>
 	<body>
 		<h1>Cara o Ceca</h1>
-		<form id="gameForm">
-			<ul>
-				<li class="option">
-					<input type="radio" id="cara" name="lado" value="cara" />
-					<label for="cara">Cara</label>
-				</li>
-				<li class="option">
-					<input type="radio" id="ceca" name="lado" value="ceca" />
-					<label for="ceca">Ceca</label>
-				</li>
-			</ul>
-			<button id="flipButton" type="submit">
-				Flip
-			</button>
-		</form>
-
 		<form id="setupForm">
 			seleccionar cantidad de rondas
 			<ul>
@@ -63,67 +47,97 @@
 			</ul>
 			<button id="startGame" type="submit">Start Game</button>
 		</form>
-		<div id="gameTable">
-			<div>Intentos: <span id="flipCountDisplay"></span></div>
-			<div>Moneda: <span id="flipSide"></span></div>
-			<div id="errorMessage">error:</div>
-			<div id="partialResult"></div>
-			<div id="finalResultView">
-				Ganador: <span id="finalResult"></span>
-			</div>
-			<button id="resetButton">RESET</button>
-			<button id="resetHistoryButton">RESET HISTORY</button>
+		<form id="gameForm">
+			<ul>
+				<li class="option">
+					<input type="radio" id="cara" name="lado" value="cara" />
+					<label for="cara">Cara</label>
+				</li>
+				<li class="option">
+					<input type="radio" id="ceca" name="lado" value="ceca" />
+					<label for="ceca">Ceca</label>
+				</li>
+			</ul>
+			<button id="flipButton" type="submit">
+				Flip
+			</button>
+		</form>
+		<div id="roundTable">
+			<div>Rondas: <span id="roundsCountDisplay"></span></div>
+			<div></div>
 		</div>
+		<div id="gameTable">
+			<div>Games: <span id="gamesCountDisplay"></span></div>
+
+			<div></div>
+		</div>
+		<div id="finalMenu">
+			<button id="backToMenu">VOLVER AL MENU</button>
+			<button id="restartGame">VOLVER A JUGAR</button>
+		</div>
+		<!-- 	
+		<div id="finalResultView">Ganador: <span id="finalResult"></span></div>	
+		<div id="partialResult"></div>
+		<div id="errorMessage">error:</div>
+	 -->
+
 		<script>
 			// guardar una referencia al formulario en una variable form
 			const options = ['cara', 'ceca']
-			let gameHistory = []
+			let gameHistory
 			let selectedRoundsNumber = 0
 			const gameForm = document.querySelector('#gameForm')
 			const gameTable = document.querySelector('#gameTable')
+			const roundTable = document.querySelector('#roundTable')
 			const setupForm = document.querySelector('#setupForm')
-			const flipCountDisplay = document.querySelector('#flipCountDisplay')
-			const flipSide = document.querySelector('#flipSide')
+			const roundsCountDisplay = document.querySelector(
+				'#roundsCountDisplay'
+			)
+			const gamesCountDisplay = document.querySelector(
+				'#gamesCountDisplay'
+			)
 			const errorMessage = document.querySelector('#errorMessage')
 			const partialResult = document.querySelector('#partialResult')
 			const finalResult = document.querySelector('#finalResult')
 			const finalResultView = document.querySelector('#finalResultView')
 			const flipButton = gameForm.querySelector('#flipButton')
-			let resetButton = document.querySelector('#resetButton')
-			let resetHistoryButton = document.querySelector(
-				'#resetHistoryButton'
-			)
+			let backToMenu = document.querySelector('#backToMenu')
+			let restartGame = document.querySelector('#restartGame')
+			let finalMenu = document.querySelector('#finalMenu')
 
 			// TODO: mejor nombre
 			let rounds
 
-			//Vista INICIO DEL JUEGO
+			//) Vista 1 (INICIO DEL JUEGO)
 			setInicioDelJuego()
 			function setInicioDelJuego() {
+				setupForm.style.display = 'block'
 				setupForm.one.checked = false
 				setupForm.three.checked = true //default
 				setupForm.five.checked = false
 				gameForm.style.display = 'none'
 				gameTable.style.display = 'none'
+				roundTable.style.display = 'none'
+				finalMenu.style.display = 'none'
 				selectedRoundsNumber = getSelectedRoundsNumber()
-				//rounds = []
-				//flipCountDisplay.textContent = 0
-				//flipButton.disabled = true
+				rounds = []
+				gameHistory = []
+				roundsCountDisplay.textContent = 0
+				gameForm.cara.checked = false
+				gameForm.ceca.checked = false
+				flipButton.disabled = true
 				//partialResult.textContent = ''
 				//finalResult.textContent = ''
-				//flipSide.textContent = ''
 				//finalResultView.style.display = 'none'
 				//errorMessage.textContent = 'seleccionar cara o ceca'
-				//gameForm.cara.checked = false
-				//gameForm.ceca.checked = false
 			}
 			setupForm.addEventListener('submit', (event) => {
 				event.preventDefault()
 				selectedRoundsNumber = getSelectedRoundsNumber()
 				setupForm.style.display = 'none'
-
 				gameForm.style.display = 'block'
-				gameTable.style.display = 'block'
+				roundTable.style.display = 'block'
+				//gameTable.style.display = 'block'
 			})
 			function getSelectedRoundsNumber() {
 				const data = new FormData(setupForm)
@@ -134,6 +148,8 @@
 				}
 				return null
 			}
+
+			//Fin de la primer vista "Inicio del Juego"
 
 			if (getSelectedLado()) {
 				partialResult.textContent = ''
@@ -156,83 +172,114 @@
 				return Math.floor(Math.random() * (max - min)) + min //The maximum is exclusive and the minimum is inclusive
 			}
 
-			resetButton.addEventListener('click', () => {
-				//resetear todo para volver a empezar
-				setInicioDelJuego()
-			})
-
-			resetHistoryButton.addEventListener('click', () => {
-				if (gameHistory !== []) {
-					return (gameHistory = ['']), console.log(gameHistory)
-				}
-				return gameHistory
-			})
-
 			gameForm.addEventListener('change', () => {
 				if (getSelectedLado()) {
-					errorMessage.textContent = ''
 					flipButton.disabled = false
 				}
 			})
 
-			// Ejecuta la función que procesa cada ronda
+			// ))Ejecuta la función que procesa cada ronda VISTA 2 (RONDAS)
 			gameForm.addEventListener('submit', (event) => {
 				event.preventDefault()
-
-				errorMessage.textContent = ''
-
 				// Calcula si el usuario gano la ronda
 
 				let userLado = getSelectedLado()
 
 				if (userLado === null) {
-					errorMessage.textContent = 'seleccionar cara o ceca'
+					flipButton.disabled = true
 					return
 				}
 
 				const machineLadoIdx = getRandomInt(0, options.length)
 				const machineLado = options[machineLadoIdx]
-				flipSide.textContent = machineLado
 
 				if (machineLado === userLado) {
-					partialResult.textContent = 'Ganaste'
 					rounds.push(true)
 				} else {
-					partialResult.textContent = 'Perdiste'
 					rounds.push(false)
 				}
-
 				// Computa valores para poder razonar las reglas del juego de manera semántica
 				let flipCount = rounds.length
+				console.log('rounds', rounds)
+
 				let roundsWonByUser = rounds.filter((r) => r).length
+				let roundsLostByUser = rounds.length - roundsWonByUser
 
-				flipCountDisplay.textContent = flipCount
+				console.log(
+					'rounds won by user ',
+					roundsWonByUser,
 
-				console.log('round', {
-					total: flipCount,
-					wonByUser: roundsWonByUser,
-				})
+					'rounds lost by user ',
+					roundsLostByUser
+				)
 
-				// Chqeuea si se completo un Game
-				if (
-					flipCount === 3 ||
-					roundsWonByUser === 2 ||
-					(flipCount === 2 && roundsWonByUser === 0)
-				) {
-					let userWon = roundsWonByUser === 2
+				roundsCountDisplay.textContent = flipCount
 
-					gameHistory.push(userWon)
+				// Chequea si se completo un Game
+				let roundsWonLimit = Math.ceil(selectedRoundsNumber / 2)
+				console.log(
+					'rounds number ',
+					selectedRoundsNumber,
+					'rounds won limit ',
+					roundsWonLimit,
+					'flip Count ',
+					flipCount
+				)
 
-					console.log('game ended', {
-						userWon,
-						history: gameHistory,
-					})
+				// mejor de 3, termina el game cuando:
+				// 		* 3 rounds
+				//		* usuario gano 2 rounds
+				//		* usuario perdio 2 rounds
+				//
+				// mejor de 5, termina el game cuando:
+				//		* 5 rounds
+				//		* usuario gano 3 rounds
+				//		* usuario perdio 3 rounds
+				//
+				//
+
+				if (roundsWonByUser === roundsWonLimit) {
+					flipButton.disabled = true
+					if (gameHistory.length === 3) {
+						gameHistory.shift()
+					}
+					gameHistory.push({ win: true, result: rounds })
+					console.log('GAME ENDED:', gameHistory)
+					gameTable.style.display = 'block'
+					finalMenu.style.display = 'block'
 
 					gameForm.style.display = 'none'
-					finalResult.textContent = userWon ? 'Ganaste' : 'Perdiste'
+					roundTable.style.display = 'block'
+				} else if (roundsLostByUser === roundsWonLimit) {
 					flipButton.disabled = true
-					finalResultView.style.display = 'block'
+					if (gameHistory.length === 3) {
+						gameHistory.shift()
+					}
+					gameHistory.push({ win: false, result: rounds })
+					console.log('GAME ENDED:', gameHistory)
+					gameTable.style.display = 'block'
+					finalMenu.style.display = 'block'
+
+					gameForm.style.display = 'none'
+					roundTable.style.display = 'block'
+					//gameForm.style.display = 'none'
+					//finalResult.textContent = userWon ? 'Ganaste' : 'Perdiste'
+					//finalResultView.style.display = 'block'
 				}
+			})
+
+			//))) menu final
+			backToMenu.addEventListener('click', () => {
+				gameForm.style.display = 'block'
+				finalMenu.style.display = 'none'
+				rounds = []
+				roundsCountDisplay.textContent = 0
+				gameForm.cara.checked = false
+				gameForm.ceca.checked = false
+				console.log(rounds)
+			})
+			restartGame.addEventListener('click', () => {
+				setInicioDelJuego()
 			})
 		</script>
 	</body>
