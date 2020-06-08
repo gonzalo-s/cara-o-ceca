@@ -18,7 +18,6 @@
 
     -ocultar-
     Los elementos de la vista "Inicio del Juego":
-    - Mensaje bienvenida
     - Menu de cantidad de rondas
     - boton **Iniciar Juego**
 
@@ -50,7 +49,8 @@
 
 1. Tabla con los resultados de las Rondas del ultimo Game y reslultado final del Game. (_Ver Cuadro B_)
 1. Mostrar el resultado de los ultimos 3 Games con el ultimo Game destacado. (_Ver Cuadro C_)
-1. Boton **Volver a Jugar**. lleva a la vista 1.
+1. Boton **Volver a Jugar**, lleva a la vista 2.
+1. Boton de **Reset Game** lleva a la vista 1.
 
 ##### (B)
 
@@ -82,10 +82,10 @@
 -   [x]     	- ocultar boton de flip
 -   [x]     	- resetear contador
 -   [ ]     	- agregar al hisotrial el reslutado
--   [ ] (uso RESET) - agregar boton de "volver a jugar"
+-   [x] (uso RESET) - agregar boton de "volver a jugar"
 -   [x] Documentar las posibles vistas **detallando** qué quedaría visible u oculto en cada una (en este archivo)
--   [ ] Mostrar y ocultar los elementos dependiendo de la vista actual (p. ej., el botón reset no tiene sentido durante el juego)
--   [ ] Mostrar al usuario el resultado de cada ronda anterior del mismo juego, sin crear variables nuevas
--   [ ] Hacer la cantidad de rondas por juego configurable (mejor de 1, 3 o 5)
-    -   [ ] Documentar los cambios en las vistas
-    -   [ ] Implementarlo
+-   [x] Mostrar y ocultar los elementos dependiendo de la vista actual (p. ej., el botón reset no tiene sentido durante el juego)
+-   [x] Mostrar al usuario el resultado de cada ronda anterior del mismo juego, sin crear variables nuevas
+-   [x] Hacer la cantidad de rondas por juego configurable (mejor de 1, 3 o 5)
+    -   [x] Documentar los cambios en las vistas
+    -   [x] Implementarlo
