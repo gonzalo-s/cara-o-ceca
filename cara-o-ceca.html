@@ -73,8 +73,8 @@
 			<div>Game 3: <span id="game3"> </span></div>
 		</div>
 		<div id="finalMenu">
-			<button id="backToMenu">VOLVER AL MENU</button>
-			<button id="restartGame">VOLVER A JUGAR</button>
+			<button id="backToMenu">PLAY AGAIN</button>
+			<button id="restartGame">RESET GAME</button>
 		</div>
 
 		<!-- 	
@@ -181,14 +181,13 @@
 			function createRoundsTable() {
 				roundTable.appendChild(round1R)
 
-				if (selectedRoundsNumber < 5) {
+				if (selectedRoundsNumber > 1) {
 					roundTable.appendChild(round2R)
 					roundTable.appendChild(round3R)
-				} else if ((selectedRoundsNumber = 5)) {
-					roundTable.appendChild(round2R)
-					roundTable.appendChild(round3R)
-					roundTable.appendChild(round4R)
-					roundTable.appendChild(round5R)
+					if ((selectedRoundsNumber = 5)) {
+						roundTable.appendChild(round4R)
+						roundTable.appendChild(round5R)
+					}
 				}
 			}
 
@@ -204,12 +203,6 @@
 
 			function insertGameTableData(idx) {
 				let gameDiv = [game1, game2, game3]
-
-				/* 				gameHistory[0].result.forEach((r) => {
-					r ? (res += ' o') : (res += ' x')
-					return res
-				}) */
-
 				function booleanToXO(arr) {
 					let res = ''
 					arr.result.forEach((r) => {
@@ -217,20 +210,29 @@
 					})
 					return res
 				}
-				console.log(booleanToXO(gameHistory[idx - 1]))
+				console.log(gameHistory)
 
-				if (idx < 3) {
+				if (idx === 1) {
 					gameDiv[idx - 1].textContent = gameHistory[idx - 1].win
 						? 'Ganaste' + booleanToXO(gameHistory[idx - 1])
 						: 'Perdiste' + booleanToXO(gameHistory[idx - 1])
+				}
+
+				if (idx === 2) {
+					game1.textContent = gameHistory[1].win
+						? 'Ganaste' + booleanToXO(gameHistory[1])
+						: 'Perdiste' + booleanToXO(gameHistory[1])
+					game2.textContent = gameHistory[0].win
+						? 'Ganaste' + booleanToXO(gameHistory[0])
+						: 'Perdiste' + booleanToXO(gameHistory[0])
 				} else if (idx === 3) {
-					gameDiv[0].textContent = gameHistory[0].win
+					gameDiv[2].textContent = gameHistory[0].win
 						? 'Ganaste' + booleanToXO(gameHistory[0])
 						: 'Perdiste' + booleanToXO(gameHistory[0])
 					gameDiv[1].textContent = gameHistory[1].win
 						? 'Ganaste' + booleanToXO(gameHistory[1])
 						: 'Perdiste' + booleanToXO(gameHistory[1])
-					gameDiv[2].textContent = gameHistory[2].win
+					gameDiv[0].textContent = gameHistory[2].win
 						? 'Ganaste' + booleanToXO(gameHistory[2])
 						: 'Perdiste' + booleanToXO(gameHistory[2])
 				}
