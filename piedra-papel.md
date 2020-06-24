@@ -111,19 +111,19 @@ Mostrar info de:
 1. Idle
 
 Aparecen los tres botones de seleccion y el boton de reset.
-Aparecen los datos actualizados o en 0 si es la primer partida.
 (modo mejor de 3)Aparece boton "Mejor de 3"
-
-2. Selected
+Aparecen los datos actualizados o en 0 si es la primer partida.
 
 A- el usuiario selecciona el boton de reset:
 se resetean los datos (todo a 0) y se pasa a la vista Idle.
 
 B- El usuario selecciona una de las tres opciones (piedra, papel o tijera)
 
+C- Si el boton "mejor de 3" esta seleccionado se cuenta a partir de esa partida el mejor de 3 y aparece el contador 1/3 2/3 3/3
+
+2. Playing
+
 Aparecen los tres botones de seleccion y el boton de reset **DESHABILITADOS**.
 Aparecen los datos sin modificacion.
 Aparece algo que indique que el juego esta en curso, (animacion, 3-2-1, etc)
 Se determina ganador, se actualizan los datos y se pasa a la vista Idle.
-
-C- Si el boton "mejor de 3" esta seleccionado se cuenta a partir de esa partida el mejor de 3 y aparece el contador 1/3 2/3 3/3
