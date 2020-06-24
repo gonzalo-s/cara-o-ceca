@@ -145,7 +145,12 @@
 				gameTable.style.display = 'none'
 				roundTable.style.display = 'none'
 				finalMenu.style.display = 'none'
-				selectedRoundsNumber = getSelectedRoundsNumber()
+				//selectedRoundsNumber = getSelectedRoundsNumber()
+				console.log(
+					'selectedRoundsNumber setinicio',
+					selectedRoundsNumber
+				)
+
 				rounds = []
 				roundsTableReset()
 				gameTableReset()
@@ -160,19 +165,25 @@
 				selectedRoundsNumber = getSelectedRoundsNumber()
 				setupForm.style.display = 'none'
 				gameForm.style.display = 'block'
+				console.log(
+					'selectedRoundsNumber setupForm submit',
+					selectedRoundsNumber
+				)
 				createRoundsTable()
-
 				roundTable.style.display = 'block'
 				//gameTable.style.display = 'block'
 			})
 			function getSelectedRoundsNumber() {
 				const data = new FormData(setupForm)
+
 				for (const entry of data) {
 					if (entry[0] === 'roundsNumber') {
+						console.log(entry)
+
 						return entry[1]
 					}
+					return null
 				}
-				return null
 			}
 
 			//Fin de la primer vista "Inicio del Juego"
@@ -184,7 +195,7 @@
 				if (selectedRoundsNumber > 1) {
 					roundTable.appendChild(round2R)
 					roundTable.appendChild(round3R)
-					if ((selectedRoundsNumber = 5)) {
+					if (selectedRoundsNumber === 5) {
 						roundTable.appendChild(round4R)
 						roundTable.appendChild(round5R)
 					}
@@ -269,6 +280,7 @@
 			gameForm.addEventListener('submit', (event) => {
 				event.preventDefault()
 				// Calcula si el usuario gano la ronda
+				console.log('selectedRoundsNumber search', selectedRoundsNumber)
 				let userLado = getSelectedLado()
 
 				if (userLado === null) {
@@ -278,7 +290,6 @@
 
 				const machineLadoIdx = getRandomInt(0, options.length)
 				const machineLado = options[machineLadoIdx]
-
 				if (machineLado === userLado) {
 					rounds.push(true)
 				} else {
@@ -302,10 +313,11 @@
 				roundsCountDisplay.textContent = flipCount
 
 				// Chequea si se completo un Game
+
 				let roundsWonLimit = Math.ceil(selectedRoundsNumber / 2)
 				console.log(
 					'rounds number ',
-					selectedRoundsNumber,
+					selectedRoundsNumber, //no muestra 3
 					'rounds won limit ',
 					roundsWonLimit,
 					'flip Count ',
