@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Reducer pattern 01</title>
+	</head>
+	<body>
+		<h1>Reducer pattern 01</h1>
+		<div id="app"></div>
+		<script>
+			// (state, action) => nextState
+			// 1. Un usuario entra la app
+			// 2. El usuario inicia un request al hacer click en un botón y espera el resultado
+			// 3. El resultado llega después de un tiempo, puede ser satisfactorio como fallido
+
+			// State management Library
+			// ===
+
+			let currentState = null
+
+			function dispatch(action) {
+				if (currentState === null) {
+					currentState = initialState
+				}
+				currentState = reducer(currentState, action)
+				updateUI({ ...currentState })
+			}
+
+			// State management
+			// ===
+			let initialState = {
+				loading: false,
+				success: false,
+				error: false,
+				display: 'Idle',
+			}
+
+			function reducer(state, action) {
+				// Action types:
+				// REQUEST_START
+				// REQUEST_SUCCESS
+				// REQUEST_ERROR
+				switch (action.type) {
+					case 'REQUEST_START':
+						return {
+							loading: true,
+							success: false,
+							error: false,
+							display: 'Requesting',
+						}
+
+					case 'REQUEST_SUCCESS':
+						return {
+							loading: false,
+							success: true,
+							error: false,
+							display: 'Succeded',
+						}
+
+					case 'REQUEST_ERROR':
+						return {
+							loading: false,
+							success: false,
+							error: true,
+							display: 'Failed',
+						}
+
+					default:
+						return state
+				}
+			}
+
+			// UI
+			// ===
+			const app = document.querySelector('#app')
+
+			function updateUI(state) {
+				app.innerHTML = ''
+				app.appendChild(renderStep(state))
+				app.appendChild(renderStateDisplay(state))
+			}
+
+			function renderStep(state) {
+				const step = document.createElement('button')
+				step.textContent = 'Avanzar estado'
+
+				function stepHandler() {
+					// Si no está cargando, que inicie el request
+					// Si está cargando, puede pasa a success o error aleatoriamente
+					// Si está en success o error, empieza a cargar otra vez
+					if (
+						(state.loading === false && state.success === false) ||
+						(state.loading === false && state.error === false)
+					) {
+						dispatch({ type: 'REQUEST_START' })
+					} else if (state.loading) {
+						Math.random() >= 0.5
+							? dispatch({ type: 'REQUEST_SUCCESS' })
+							: dispatch({ type: 'REQUEST_ERROR' })
+					} else if (state.success || state.error) {
+						dispatch({ type: 'REQUEST_START' })
+					}
+				}
+
+				step.addEventListener('click', stepHandler)
+				return step
+			}
+
+			function renderStateDisplay(state) {
+				// idle
+				// requesting
+				// succeded
+				// failed
+				const stateDisplay = document.createElement('div')
+				stateDisplay.textContent = state.display
+				return stateDisplay
+			}
+
+			dispatch({ type: '' })
+		</script>
+	</body>
+</html>

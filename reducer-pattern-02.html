@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Reducer pattern 02</title>
+	</head>
+	<body>
+		<h1>Reducer pattern 02 (Finite state machine)</h1>
+		<div id="app"></div>
+		<script>
+			// (state, action) => nextState
+			// 1. Un usuario entra la app
+			// 2. El usuario inicia un request al hacer click en un botón y espera el resultado
+			// 3. El resultado llega después de un tiempo, puede ser satisfactorio como fallido
+
+			// State management Library
+			// ===
+			let currentState = null
+
+			function dispatch(action) {
+				if (currentState === null) {
+					currentState = initialState
+				}
+				currentState = reducer(currentState, action)
+				updateUI({ ...currentState })
+			}
+
+			// State management
+			// ===
+			let initialState = {
+				successCounter: 0,
+				value: 'idle',
+			}
+
+			function reducer(state, action) {
+				// States:
+				// idle => [REQUEST_START]
+				// loading => [REQUEST_SUCCESS, REQUEST_ERROR]
+				// success => [REQUEST_RESET]
+				// error => [REQUEST_RESET]
+
+				switch (state.value) {
+					case 'idle':
+						switch (action.type) {
+							case 'REQUEST_START':
+								return { ...state, value: 'loading' }
+						}
+					case 'loading':
+						switch (action.type) {
+							case 'REQUEST_SUCCESS':
+								return {
+									value: 'success',
+									successCounter: state.successCounter + 1,
+								}
+							case 'REQUEST_ERROR':
+								return { ...state, value: 'error' }
+						}
+					case 'success':
+						switch (action.type) {
+							case 'REQUEST_RESET':
+								return { ...state, value: 'idle' }
+						}
+					case 'error':
+						switch (action.type) {
+							case 'REQUEST_RESET':
+								return { ...state, value: 'idle' }
+						}
+					default:
+						return state
+				}
+			}
+
+			// UI
+			// ===
+			const app = document.querySelector('#app')
+
+			function updateUI(state) {
+				app.innerHTML = ''
+				app.appendChild(renderStep(state))
+				app.appendChild(renderStateDisplay(state))
+			}
+
+			function renderStep(state) {
+				const step = document.createElement('button')
+				step.textContent = 'Avanzar estado'
+
+				function stepHandler() {
+					// Si no está cargando, que inicie el request
+					// Si está cargando, puede pasa a success o error aleatoriamente
+					// Si está en success o error, empieza a cargar otra vez
+					if (state.value === 'idle') {
+						dispatch({ type: 'REQUEST_START' })
+					} else if (state.value === 'loading') {
+						Math.random() >= 0.5
+							? dispatch({ type: 'REQUEST_SUCCESS' })
+							: dispatch({ type: 'REQUEST_ERROR' })
+					} else if (
+						state.value === 'success' ||
+						state.value === 'error'
+					) {
+						dispatch({ type: 'REQUEST_RESET' })
+					}
+				}
+
+				step.addEventListener('click', stepHandler)
+				return step
+			}
+
+			function renderStateDisplay(state) {
+				const stateDisplay = document.createElement('div')
+
+				stateDisplay.textContent = state.value
+
+				if (state.value === 'success') {
+					stateDisplay.textContent += ': ' + state.successCounter
+				}
+
+				return stateDisplay
+			}
+
+			dispatch({ type: '' })
+		</script>
+	</body>
+</html>
