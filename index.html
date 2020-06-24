@@ -14,5 +14,37 @@
 				>
 			</li>
 		</ul>
+		<script>
+			let a = 2
+			let b = 3
+			let c = 4
+			let d = 5
+
+			function sumTwo(x, y) {
+				return x + y
+			}
+
+			console.log(sumTwo(a, b))
+			console.log(sumTwo(a, c))
+			console.log(sumTwo(a, d))
+
+			function createSumOne(x) {
+				let counter = 0
+				return function sumOne(y) {
+					counter += 1
+					return x + y + counter
+				}
+			}
+
+			const sumA = createSumOne(a)
+			const sumB = createSumOne(b)
+
+			console.log(sumA(1)) // 4
+			console.log(sumB(1)) // 5
+			console.log(sumA(2)) // 6
+			console.log(sumB(1)) // 6
+			console.log(sumA(1)) // 6
+			console.log(sumB(1)) // 7
+		</script>
 	</body>
 </html>
