@@ -95,7 +95,6 @@ const dispatch = makeDispatch(initialState, reducer, updateUi)
 function piedraBtn(state) {
 	const piedra = document.createElement('button')
 	piedra.textContent = 'PIEDRA'
-	piedra.className = 'ppt'
 	function piedraHandler() {
 		//si esta en Idle y selecciona piedra REQUEST_START
 		// si esta Playing deshabilitar el boton
@@ -103,8 +102,6 @@ function piedraBtn(state) {
 			dispatch({ type: 'REQUEST_START' })
 		} else if (state.value === 'playing') {
 			//disable button
-			console.log(document.getElementsByClassName('ppt'))
-			document.getElementsByClassName('ppt')
 
 			console.log('playing')
 		}
