@@ -40,6 +40,7 @@ function reducer(state, action) {
 						value: 'result',
 						machineHand: action.hand,
 					}
+					//random select hand for machine
 
 					if (state.userHand === nextState.machineHand) {
 						nextState.ties = nextState.ties + 1
@@ -86,30 +87,77 @@ function updateUI(state) {
 	app.innerHTML = ''
 	app.appendChild(piedraBtn(state))
 	app.appendChild(papelBtn(state))
+	app.appendChild(tijeraBtn(state))
+
+	console.log(state)
 
 	//app.appendChild(renderStateDisplay(state))
 }
 
-const dispatch = makeDispatch(initialState, reducer, updateUi)
+const dispatch = makeDispatch(initialState, reducer, updateUI)
 
 function piedraBtn(state) {
 	const piedra = document.createElement('button')
 	piedra.textContent = 'PIEDRA'
+	state.value === 'shakingHands'
+		? (piedra.disabled = true)
+		: (piedra.disabled = false)
 	function piedraHandler() {
-		//si esta en Idle y selecciona piedra REQUEST_START
+		//si esta en Idle y selecciona piedra shakingHands
 		// si esta Playing deshabilitar el boton
-		if (state.value === 'idle') {
-			dispatch({ type: 'REQUEST_START' })
-		} else if (state.value === 'playing') {
-			//disable button
-
-			console.log('playing')
+		if (state.value === 'idle' || state.value === 'result') {
+			dispatch({
+				type: 'USER_SELECT_HAND',
+				hand: 'rock',
+			})
 		}
 	}
 
 	piedra.addEventListener('click', piedraHandler)
 
 	return piedra
+}
+function papelBtn(state) {
+	const papel = document.createElement('button')
+	papel.textContent = 'PAPEL'
+	state.value === 'shakingHands'
+		? (papel.disabled = true)
+		: (papel.disabled = false)
+	function papelHandler() {
+		//si esta en Idle y selecciona papel shakingHands
+		// si esta Playing deshabilitar el boton
+		if (state.value === 'idle' || state.value === 'result') {
+			dispatch({
+				type: 'USER_SELECT_HAND',
+				hand: 'paper',
+			})
+		}
+	}
+
+	papel.addEventListener('click', papelHandler)
+
+	return papel
+}
+function tijeraBtn(state) {
+	const tijera = document.createElement('button')
+	tijera.textContent = 'TIJERA'
+	state.value === 'shakingHands'
+		? (tijera.disabled = true)
+		: (tijera.disabled = false)
+	function tijeraHandler() {
+		//si esta en Idle y selecciona tijera shakingHands
+		// si esta Playing deshabilitar el boton
+		if (state.value === 'idle' || state.value === 'result') {
+			dispatch({
+				type: 'USER_SELECT_HAND',
+				hand: 'scissors',
+			})
+		}
+	}
+
+	tijera.addEventListener('click', tijeraHandler)
+
+	return tijera
 }
 
 /*
