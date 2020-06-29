@@ -25,7 +25,7 @@ function reducer(state, action) {
 						...state,
 						value: 'shakingHands',
 						userHand: action.hand,
-					} //Start game
+					}
 			}
 		case 'shakingHands':
 			switch (action.type) {
@@ -38,9 +38,17 @@ function reducer(state, action) {
 					let nextState = {
 						...state,
 						value: 'result',
-						machineHand: action.hand,
 					}
 					//random select hand for machine
+					let randomNum = Math.random()
+
+					if (randomNum <= 0.33) {
+						nextState.machineHand = 'rock'
+					} else if (randomNum > 0.66) {
+						nextState.machineHand = 'paper'
+					} else {
+						nextState.machineHand = 'scissors'
+					}
 
 					if (state.userHand === nextState.machineHand) {
 						nextState.ties = nextState.ties + 1
@@ -56,12 +64,16 @@ function reducer(state, action) {
 					} else {
 						nextState.machineWins = nextState.machineWins + 1
 					}
+					console.log(nextState)
 
 					nextState.rounds =
 						nextState.userWins +
 						nextState.machineWins +
 						nextState.ties
+					nextState.userHand = null
+					nextState.machineHand = null
 
+					console.log(nextState)
 					return nextState
 			}
 		case 'result':
@@ -88,10 +100,17 @@ function updateUI(state) {
 	app.appendChild(piedraBtn(state))
 	app.appendChild(papelBtn(state))
 	app.appendChild(tijeraBtn(state))
+	app.appendChild(userWinsDisplay(state))
+	app.appendChild(machineWinsDisplay(state))
+	app.appendChild(tiesDisplay(state))
+	app.appendChild(roundsDisplay(state))
 
 	console.log(state)
-
-	//app.appendChild(renderStateDisplay(state))
+	if (state.value === 'shakingHands') {
+		dispatch({
+			type: 'MACHINE_SELECT_HAND',
+		})
+	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
 }
 
 const dispatch = makeDispatch(initialState, reducer, updateUI)
@@ -158,6 +177,30 @@ function tijeraBtn(state) {
 	tijera.addEventListener('click', tijeraHandler)
 
 	return tijera
+}
+function userWinsDisplay(state) {
+	const userWinsStats = document.createElement('div')
+	userWinsStats.textContent = 'Player Wins: ' + state.userWins
+
+	return userWinsStats
+}
+function machineWinsDisplay(state) {
+	const machineWinsStats = document.createElement('div')
+	machineWinsStats.textContent = 'Machine Wins: ' + state.machineWins
+
+	return machineWinsStats
+}
+function tiesDisplay(state) {
+	const tiesStats = document.createElement('div')
+	tiesStats.textContent = 'Ties: ' + state.ties
+
+	return tiesStats
+}
+function roundsDisplay(state) {
+	const roundsStats = document.createElement('div')
+	roundsStats.textContent = 'Rounds: ' + state.rounds
+
+	return roundsStats
 }
 
 /*
