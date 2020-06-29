@@ -121,6 +121,9 @@ const dispatch = makeDispatch(initialState, reducer, updateUI)
 function piedraBtn(state) {
 	const piedra = document.createElement('button')
 	piedra.textContent = 'PIEDRA'
+	state.userHand === 'rock'
+		? (piedra.style.backgroundColor = '#AA0000')
+		: (piedra.style.backgroundColor = '')
 	state.value === 'shakingHands'
 		? (piedra.disabled = true)
 		: (piedra.disabled = false)
@@ -142,6 +145,9 @@ function piedraBtn(state) {
 function papelBtn(state) {
 	const papel = document.createElement('button')
 	papel.textContent = 'PAPEL'
+	state.userHand === 'paper'
+		? (papel.style.backgroundColor = '#AA0000')
+		: (papel.style.backgroundColor = '')
 	state.value === 'shakingHands'
 		? (papel.disabled = true)
 		: (papel.disabled = false)
@@ -163,6 +169,9 @@ function papelBtn(state) {
 function tijeraBtn(state) {
 	const tijera = document.createElement('button')
 	tijera.textContent = 'TIJERA'
+	state.userHand === 'scissors'
+		? (tijera.style.backgroundColor = '#AA0000')
+		: (tijera.style.backgroundColor = '')
 	state.value === 'shakingHands'
 		? (tijera.disabled = true)
 		: (tijera.disabled = false)
