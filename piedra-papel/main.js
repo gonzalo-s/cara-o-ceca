@@ -84,6 +84,8 @@ function reducer(state, action) {
 						value: 'shakingHands',
 						userHand: action.hand,
 					}
+				case 'RESET_GAME':
+					return initialState
 			}
 		default:
 			return state
@@ -104,6 +106,7 @@ function updateUI(state) {
 	app.appendChild(machineWinsDisplay(state))
 	app.appendChild(tiesDisplay(state))
 	app.appendChild(roundsDisplay(state))
+	app.appendChild(resetBtn(state))
 
 	console.log(state)
 	if (state.value === 'shakingHands') {
@@ -202,44 +205,17 @@ function roundsDisplay(state) {
 
 	return roundsStats
 }
+function resetBtn(state) {
+	const reset = document.createElement('button')
+	reset.textContent = 'RESET GAME'
+	function resetHandler() {
+		dispatch({
+			type: 'RESET_GAME',
+		})
+	}
 
-/*
-			function renderStep(state) {
-				const step = document.createElement('button')
-				step.textContent = 'Avanzar estado'
-
-				function stepHandler() {
-					// Si no está cargando, que inicie el request
-					// Si está cargando, puede pasa a success o error aleatoriamente
-					// Si está en success o error, empieza a cargar otra vez
-					if (state.value === 'idle') {
-						dispatch({ type: 'REQUEST_START' })
-					} else if (state.value === 'loading') {
-						Math.random() >= 0.5
-							? dispatch({ type: 'REQUEST_SUCCESS' })
-							: dispatch({ type: 'REQUEST_ERROR' })
-					} else if (
-						state.value === 'success' ||
-						state.value === 'error'
-					) {
-						dispatch({ type: 'REQUEST_RESET' })
-					}
-				}
-
-				step.addEventListener('click', stepHandler)
-				return step
-			}
-
-			function renderStateDisplay(state) {
-				const stateDisplay = document.createElement('div')
-
-				stateDisplay.textContent = state.value
-
-				if (state.value === 'success') {
-					stateDisplay.textContent += ': ' + state.successCounter
-				}
-
-				return stateDisplay
-			} */
+	reset.addEventListener('click', resetHandler)
+	return reset
+}
 
 dispatch({ type: '' })
