@@ -106,7 +106,9 @@ function updateUI(state) {
 	app.appendChild(statsDisplays(state))
 	app.appendChild(resetBtn(dispatch))
 	if (state.value === 'shakingHands') {
-		setTimeout(dispatch({ type: 'MACHINE_SELECT_HAND' }), 2000)
+		setTimeout((dispatchDelay) => {
+			dispatch({ type: 'MACHINE_SELECT_HAND' })
+		}, 1000)
 	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
 }
 
