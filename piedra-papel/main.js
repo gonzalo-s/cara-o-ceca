@@ -1,6 +1,8 @@
 import makeDispatch from './dispatcher.js'
 import resetBtn from './resetBtn.js'
 import selectionBtns from './selectionBtns.js'
+import statsDisplays from './statsDisplays.js'
+
 // State management
 // ===
 let initialState = {
@@ -109,36 +111,6 @@ function updateUI(state) {
 			type: 'MACHINE_SELECT_HAND',
 		})
 	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
-}
-function statsDisplays(state) {
-	app.appendChild(userWinsDisplay(state))
-	app.appendChild(machineWinsDisplay(state))
-	app.appendChild(tiesDisplay(state))
-	app.appendChild(roundsDisplay(state))
-}
-function userWinsDisplay(state) {
-	const userWinsStats = document.createElement('div')
-	userWinsStats.textContent = 'Player Wins: ' + state.userWins
-
-	return userWinsStats
-}
-function machineWinsDisplay(state) {
-	const machineWinsStats = document.createElement('div')
-	machineWinsStats.textContent = 'Machine Wins: ' + state.machineWins
-
-	return machineWinsStats
-}
-function tiesDisplay(state) {
-	const tiesStats = document.createElement('div')
-	tiesStats.textContent = 'Ties: ' + state.ties
-
-	return tiesStats
-}
-function roundsDisplay(state) {
-	const roundsStats = document.createElement('div')
-	roundsStats.textContent = 'Rounds: ' + state.rounds
-
-	return roundsStats
 }
 
 dispatch({ type: '' })
