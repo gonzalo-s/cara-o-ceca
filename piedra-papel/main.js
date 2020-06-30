@@ -102,14 +102,16 @@ const dispatch = makeDispatch(initialState, reducer, updateUI)
 
 function updateUI(state) {
 	app.innerHTML = ''
-	selectionBtns(state, dispatch)
-	statsDisplays(state)
-	resetBtn(dispatch)
-	console.log(state)
+	app.appendChild(selectionBtns(state, dispatch))
+	app.appendChild(statsDisplays(state))
+	app.appendChild(resetBtn(dispatch))
 	if (state.value === 'shakingHands') {
-		dispatch({
-			type: 'MACHINE_SELECT_HAND',
-		})
+		setTimeout(
+			dispatch({
+				type: 'MACHINE_SELECT_HAND',
+			}),
+			2000
+		)
 	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
 }
 

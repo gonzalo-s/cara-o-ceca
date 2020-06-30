@@ -1,14 +1,18 @@
-export default function resetBtn(dispatch) {
-	const reset = document.createElement('button')
-	reset.textContent = 'RESET GAME'
-	reset.addEventListener('click', resetHandler)
-	app.appendChild(reset)
-	function resetHandler() {
-		console.log('event')
+export default function reset(dispatch) {
+	const resetWrapper = document.createElement('div')
 
-		dispatch({
-			type: 'RESET_GAME',
-		})
+	resetBtn()
+
+	function resetBtn() {
+		const reset = document.createElement('button')
+		reset.textContent = 'RESET GAME'
+		reset.addEventListener('click', resetHandler)
+		resetWrapper.appendChild(reset)
+		function resetHandler() {
+			dispatch({
+				type: 'RESET_GAME',
+			})
+		}
 	}
-	return reset
+	return resetWrapper
 }
