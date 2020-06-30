@@ -100,9 +100,9 @@ const dispatch = makeDispatch(initialState, reducer, updateUI)
 
 function updateUI(state) {
 	app.innerHTML = ''
-	handSelectionBtns(state)
+	selectionBtns(state)
 	statsDisplays(state)
-	app.appendChild(resetBtn(dispatch).reset)
+	resetBtn(dispatch)
 	console.log(state)
 	if (state.value === 'shakingHands') {
 		dispatch({
@@ -110,7 +110,7 @@ function updateUI(state) {
 		})
 	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
 }
-function handSelectionBtns(state) {
+function selectionBtns(state) {
 	app.appendChild(piedraBtn(state))
 	app.appendChild(papelBtn(state))
 	app.appendChild(tijeraBtn(state))
