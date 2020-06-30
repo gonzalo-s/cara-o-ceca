@@ -1,4 +1,5 @@
 import makeDispatch from './dispatcher.js'
+import resetBtn from './resetBtn.js'
 
 // State management
 // ===
@@ -95,12 +96,13 @@ function reducer(state, action) {
 // ===
 
 const app = document.querySelector('#app')
+const dispatch = makeDispatch(initialState, reducer, updateUI)
 
 function updateUI(state) {
 	app.innerHTML = ''
 	handSelectionBtns(state)
 	statsDisplays(state)
-	app.appendChild(resetBtn(state))
+	app.appendChild(resetBtn(dispatch).reset)
 	console.log(state)
 	if (state.value === 'shakingHands') {
 		dispatch({
@@ -119,8 +121,6 @@ function statsDisplays(state) {
 	app.appendChild(tiesDisplay(state))
 	app.appendChild(roundsDisplay(state))
 }
-
-const dispatch = makeDispatch(initialState, reducer, updateUI)
 
 function piedraBtn(state) {
 	const piedra = document.createElement('button')
@@ -217,18 +217,6 @@ function roundsDisplay(state) {
 	roundsStats.textContent = 'Rounds: ' + state.rounds
 
 	return roundsStats
-}
-function resetBtn(state) {
-	const reset = document.createElement('button')
-	reset.textContent = 'RESET GAME'
-	function resetHandler() {
-		dispatch({
-			type: 'RESET_GAME',
-		})
-	}
-
-	reset.addEventListener('click', resetHandler)
-	return reset
 }
 
 dispatch({ type: '' })
