@@ -73,7 +73,6 @@ function reducer(state, action) {
 					nextState.userHand = null
 					nextState.machineHand = null
 
-					console.log(nextState)
 					return nextState
 			}
 		case 'result':
@@ -99,21 +98,26 @@ const app = document.querySelector('#app')
 
 function updateUI(state) {
 	app.innerHTML = ''
-	app.appendChild(piedraBtn(state))
-	app.appendChild(papelBtn(state))
-	app.appendChild(tijeraBtn(state))
-	app.appendChild(userWinsDisplay(state))
-	app.appendChild(machineWinsDisplay(state))
-	app.appendChild(tiesDisplay(state))
-	app.appendChild(roundsDisplay(state))
+	handSelectionBtns(state)
+	statsDisplays(state)
 	app.appendChild(resetBtn(state))
-
 	console.log(state)
 	if (state.value === 'shakingHands') {
 		dispatch({
 			type: 'MACHINE_SELECT_HAND',
 		})
 	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
+}
+function handSelectionBtns(state) {
+	app.appendChild(piedraBtn(state))
+	app.appendChild(papelBtn(state))
+	app.appendChild(tijeraBtn(state))
+}
+function statsDisplays(state) {
+	app.appendChild(userWinsDisplay(state))
+	app.appendChild(machineWinsDisplay(state))
+	app.appendChild(tiesDisplay(state))
+	app.appendChild(roundsDisplay(state))
 }
 
 const dispatch = makeDispatch(initialState, reducer, updateUI)
