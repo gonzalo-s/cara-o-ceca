@@ -1,6 +1,6 @@
 import makeDispatch from './dispatcher.js'
 import resetBtn from './resetBtn.js'
-
+import selectionBtns from './selectionBtns.js'
 // State management
 // ===
 let initialState = {
@@ -100,7 +100,7 @@ const dispatch = makeDispatch(initialState, reducer, updateUI)
 
 function updateUI(state) {
 	app.innerHTML = ''
-	selectionBtns(state)
+	selectionBtns(state, dispatch)
 	statsDisplays(state)
 	resetBtn(dispatch)
 	console.log(state)
@@ -110,89 +110,11 @@ function updateUI(state) {
 		})
 	} //porque si pongo un console log aca de state muestra un estado distinto al del console log anterior??
 }
-function selectionBtns(state) {
-	app.appendChild(piedraBtn(state))
-	app.appendChild(papelBtn(state))
-	app.appendChild(tijeraBtn(state))
-}
 function statsDisplays(state) {
 	app.appendChild(userWinsDisplay(state))
 	app.appendChild(machineWinsDisplay(state))
 	app.appendChild(tiesDisplay(state))
 	app.appendChild(roundsDisplay(state))
-}
-
-function piedraBtn(state) {
-	const piedra = document.createElement('button')
-	piedra.textContent = 'PIEDRA'
-	state.userHand === 'rock'
-		? (piedra.style.backgroundColor = '#AA0000')
-		: (piedra.style.backgroundColor = '')
-	state.value === 'shakingHands'
-		? (piedra.disabled = true)
-		: (piedra.disabled = false)
-	function piedraHandler() {
-		//si esta en Idle y selecciona piedra shakingHands
-		// si esta Playing deshabilitar el boton
-		if (state.value === 'idle' || state.value === 'result') {
-			dispatch({
-				type: 'USER_SELECT_HAND',
-				hand: 'rock',
-			})
-		}
-	}
-
-	piedra.addEventListener('click', piedraHandler)
-
-	return piedra
-}
-function papelBtn(state) {
-	const papel = document.createElement('button')
-	papel.textContent = 'PAPEL'
-	state.userHand === 'paper'
-		? (papel.style.backgroundColor = '#AA0000')
-		: (papel.style.backgroundColor = '')
-	state.value === 'shakingHands'
-		? (papel.disabled = true)
-		: (papel.disabled = false)
-	function papelHandler() {
-		//si esta en Idle y selecciona papel shakingHands
-		// si esta Playing deshabilitar el boton
-		if (state.value === 'idle' || state.value === 'result') {
-			dispatch({
-				type: 'USER_SELECT_HAND',
-				hand: 'paper',
-			})
-		}
-	}
-
-	papel.addEventListener('click', papelHandler)
-
-	return papel
-}
-function tijeraBtn(state) {
-	const tijera = document.createElement('button')
-	tijera.textContent = 'TIJERA'
-	state.userHand === 'scissors'
-		? (tijera.style.backgroundColor = '#AA0000')
-		: (tijera.style.backgroundColor = '')
-	state.value === 'shakingHands'
-		? (tijera.disabled = true)
-		: (tijera.disabled = false)
-	function tijeraHandler() {
-		//si esta en Idle y selecciona tijera shakingHands
-		// si esta Playing deshabilitar el boton
-		if (state.value === 'idle' || state.value === 'result') {
-			dispatch({
-				type: 'USER_SELECT_HAND',
-				hand: 'scissors',
-			})
-		}
-	}
-
-	tijera.addEventListener('click', tijeraHandler)
-
-	return tijera
 }
 function userWinsDisplay(state) {
 	const userWinsStats = document.createElement('div')
